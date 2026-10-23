@@ -16,6 +16,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.WithProperty("Application", "CleanArchitecture.Web.Api"));
 
 builder.Services.AddControllers();
+builder.Services.AddCors(); // ponytail: allow-all dulu, persempit ke origin FE saat sudah ada
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
@@ -53,6 +54,13 @@ if (app.Environment.IsDevelopment())
 // Di dev profil http tidak punya port https → middleware ini cuma bikin warning.
 if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
+
+// Semua origin boleh — cukup untuk tahap belajar / FE lokal.
+// Nanti production: ganti jadi WithOrigins("https://app.kamu.com").
+app.UseCors(policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
 
 app.UseAuthorization();
 app.MapControllers();
