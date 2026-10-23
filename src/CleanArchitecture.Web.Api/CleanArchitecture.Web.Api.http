@@ -1,0 +1,37 @@
+@host = http://localhost:5207
+
+### List (page 1, 10 per halaman)
+GET {{host}}/api/Categories/GetRows
+Accept: application/json
+
+### List + search + paging
+GET {{host}}/api/Categories/GetRows?page=1&pageSize=5&search=sea
+Accept: application/json
+
+### Detail
+GET {{host}}/api/Categories/GetRow/1
+Accept: application/json
+
+### Insert (CategoryId 0 = id dibuat otomatis)
+POST {{host}}/api/Categories/Insert
+Content-Type: application/json
+
+{
+  "categoryId": 0,
+  "categoryName": "Snacks",
+  "description": "Chips dan kacang"
+}
+
+### Update
+PUT {{host}}/api/Categories/Update/9
+Content-Type: application/json
+
+{
+  "categoryId": 0,
+  "categoryName": "Snacks",
+  "description": "Chips, kacang, dan biskuit"
+}
+
+### Delete (semua id harus ada, kalau tidak → 404 dan tidak ada yang terhapus)
+DELETE {{host}}/api/Categories/Delete?ids=9
+Accept: application/json
