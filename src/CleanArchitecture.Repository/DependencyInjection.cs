@@ -12,6 +12,16 @@ public static class DependencyInjection
         // Satu koneksi scoped dipakai semua repo — syarat transaksi antar repo.
         services.AddScoped<IUnitOfWork>(sp => new SqlUnitOfWork(connectionString));
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ICustomerDemographicRepository, CustomerDemographicRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IRegionRepository, RegionRepository>();
+        services.AddScoped<IShipperRepository, ShipperRepository>();
+        services.AddScoped<ISupplierRepository, SupplierRepository>();
+        services.AddScoped<ITerritoryRepository, TerritoryRepository>();
+        services.AddScoped<IUsStateRepository, UsStateRepository>();
         return services;
     }
 }

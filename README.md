@@ -1,8 +1,10 @@
 # Clean Architecture — ASP.NET Core + PostgreSQL
 
 Template API dengan pemisahan layer: **Web.Api → Service → Repository → Domain**.
-Satu contoh lengkap (CRUD `Category`) yang sudah mencakup pagination, search,
-error handling, logging, dan konfigurasi rahasia di luar repo.
+CRUD lengkap untuk 11 tabel Northwind (`Categories`, `Customers`, `Employees`,
+`Orders`, `Products`, `Regions`, `Shippers`, `Suppliers`, `Territories`,
+`UsStates`, `CustomerDemographics`) dengan pagination, search, error handling,
+logging, dan konfigurasi rahasia di luar repo.
 
 ## Teknologi
 

@@ -49,7 +49,7 @@ public class CategoriesController(ICategoryService service) : ControllerBase
     }
 
     [HttpDelete("Delete")]
-    public async Task<IActionResult> Delete(int[] ids)
+    public async Task<IActionResult> Delete([FromQuery] int[] ids)
     {
         var deleted = await service.Delete(ids);
         if (!deleted)
