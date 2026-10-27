@@ -78,6 +78,15 @@ dotnet run --project src/CleanArchitecture.Web.Api
 | PUT | `/api/Categories/Update/{id}` | ubah |
 | DELETE | `/api/Categories/Delete?ids=1&ids=2` | hapus; semua id harus ada, kalau tidak 404 dan tidak ada yang terhapus |
 
+**Contract semua endpoint** (55 path, 11 tag, OpenAPI 3.1):
+[`contracts/openapi.json`](contracts/openapi.json) — import langsung ke
+Postman/Insomnia atau pakai untuk generate client. Regenerate saat controller
+berubah (aplikasi harus jalan):
+
+```bash
+curl -s http://localhost:5207/openapi/v1.json -o contracts/openapi.json
+```
+
 Contoh request lengkap ada di
 [`CleanArchitecture.Web.Api.http`](src/CleanArchitecture.Web.Api/CleanArchitecture.Web.Api.http)
 — bisa dijalankan langsung dari Visual Studio atau VS Code (ext. REST Client).
