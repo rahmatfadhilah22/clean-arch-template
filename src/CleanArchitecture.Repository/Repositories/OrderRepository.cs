@@ -14,35 +14,47 @@ public class OrderRepository(IUnitOfWork uow) : IOrderRepository
     {
         const string filter = @"
             @search IS NULL
-            OR customer_id  ILIKE '%' || @search || '%'
-            OR ship_name    ILIKE '%' || @search || '%'
-            OR ship_city    ILIKE '%' || @search || '%'
-            OR ship_country ILIKE '%' || @search || '%'";
+            OR o.customer_id  ILIKE '%' || @search || '%'
+            OR c.company_name ILIKE '%' || @search || '%'
+            OR e.first_name   ILIKE '%' || @search || '%'
+            OR e.last_name    ILIKE '%' || @search || '%'
+            OR s.company_name ILIKE '%' || @search || '%'
+            OR o.ship_name    ILIKE '%' || @search || '%'
+            OR o.ship_city    ILIKE '%' || @search || '%'
+            OR o.ship_country ILIKE '%' || @search || '%'";
 
-        var countSql = $"SELECT COUNT(*) FROM orders WHERE {filter}";
+        const string joins = @"
+            FROM orders o
+            LEFT JOIN customers c ON c.customer_id = o.customer_id
+            LEFT JOIN employees e ON e.employee_id = o.employee_id
+            LEFT JOIN shippers  s ON s.shipper_id  = o.ship_via";
+
+        var countSql = $"SELECT COUNT(*) {joins} WHERE {filter}";
 
         var pageSql = $@"
             SELECT
-                    order_id          AS OrderID
-                    ,customer_id      AS CustomerID
-                    ,employee_id      AS EmployeeID
-                    ,order_date       AS OrderDate
-                    ,required_date    AS RequiredDate
-                    ,shipped_date     AS ShippedDate
-                    ,ship_via         AS ShipVia
-                    ,freight          AS Freight
-                    ,ship_name        AS ShipName
-                    ,ship_address     AS ShipAddress
-                    ,ship_city        AS ShipCity
-                    ,ship_region      AS ShipRegion
-                    ,ship_postal_code AS ShipPostalCode
-                    ,ship_country     AS ShipCountry
-            FROM
-                    orders
+                    o.order_id          AS OrderID
+                    ,o.customer_id      AS CustomerID
+                    ,o.employee_id      AS EmployeeID
+                    ,o.order_date       AS OrderDate
+                    ,o.required_date    AS RequiredDate
+                    ,o.shipped_date     AS ShippedDate
+                    ,o.ship_via         AS ShipVia
+                    ,o.freight          AS Freight
+                    ,o.ship_name        AS ShipName
+                    ,o.ship_address     AS ShipAddress
+                    ,o.ship_city        AS ShipCity
+                    ,o.ship_region      AS ShipRegion
+                    ,o.ship_postal_code AS ShipPostalCode
+                    ,o.ship_country     AS ShipCountry
+                    ,c.company_name     AS CustomerName
+                    ,CONCAT_WS(' ', e.first_name, e.last_name) AS EmployeeName
+                    ,s.company_name     AS ShipperName
+            {joins}
             WHERE
                     {filter}
             ORDER BY
-                    order_id
+                    o.order_id
             OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
 
         var args = new
