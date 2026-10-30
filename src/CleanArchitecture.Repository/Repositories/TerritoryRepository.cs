@@ -14,22 +14,27 @@ public class TerritoryRepository(IUnitOfWork uow) : ITerritoryRepository
     {
         const string filter = @"
             @search IS NULL
-            OR territory_id          ILIKE '%' || @search || '%'
-            OR territory_description ILIKE '%' || @search || '%'";
+            OR t.territory_id          ILIKE '%' || @search || '%'
+            OR t.territory_description ILIKE '%' || @search || '%'
+            OR r.region_description    ILIKE '%' || @search || '%'";
 
-        var countSql = $"SELECT COUNT(*) FROM territories WHERE {filter}";
+        const string joins = @"
+            FROM territories t
+            LEFT JOIN region r ON r.region_id = t.region_id";
+
+        var countSql = $"SELECT COUNT(*) {joins} WHERE {filter}";
 
         var pageSql = $@"
             SELECT
-                    territory_id           AS TerritoryID
-                    ,territory_description AS TerritoryDescription
-                    ,region_id             AS RegionID
-            FROM
-                    territories
+                    t.territory_id           AS TerritoryID
+                    ,t.territory_description AS TerritoryDescription
+                    ,t.region_id             AS RegionID
+                    ,r.region_description    AS RegionDescription
+            {joins}
             WHERE
                     {filter}
             ORDER BY
-                    territory_id
+                    t.territory_id
             OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
 
         var args = new
